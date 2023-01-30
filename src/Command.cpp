@@ -16,11 +16,11 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable nbeEquipCommandTable 
+        static ChatCommandTable nbeEquipCommandTable =
         {
             { "equip",     HandleEquipEquipCommand,        SEC_PLAYER,      Console::No  }
         };
-        static ChatCommandTable nbeCommandTable =
+        static ChatCommandTable nbeCommandTable = 
         {
             { "equip",     nbeEquipCommandTable}
         };
@@ -28,6 +28,7 @@ public:
         {
             { "nbe", nbeCommandTable }
         };
+        return commandTable;
     }
 
     static bool HandleEquipEquipCommand(ChatHandler* handler, Optional<bool> enableArg)

@@ -10,7 +10,7 @@
 #include "botcommon.h"
 
 typedef uint32 EquipEntries[BOT_INVENTORY_SIZE];
-typedef std::map<uint8, EquipEntries> BotSpecLevelEquipTemplate;
+typedef std::map<uint16, EquipEntries*> BotSpecLevelEquipTemplate;
 
 class NbeEquipMgr {
 public:
@@ -19,9 +19,21 @@ public:
     static NbeEquipMgr* instance();
 public:
     void Equip(Player* player, bot_ai* ai, uint32 entry, uint8 slot);
-
+    void AutoEquip(Player* player, bot_ai* ai);
 private:
-    std::map<BotTalentSpecs, BotSpecLevelEquipTemplate> equipTemplates;
+    void buildTemplates();
+
+    void buildWarriorTemplates();
+    void buildWarriorProtectionTemplates();
+
+    void buildPriestTemplates();
+    void buildPriestHolyTemplates();
+
+    void buildWarlockTemplates();
+    void buildWarlockDestroyTemplates();
+private:
+    std::map<uint8, BotSpecLevelEquipTemplate> equipTemplates;
+    uint16 getMasterLevel(Player*);
 };
 
 #define sNbeEquipMgr NbeEquipMgr::instance()
