@@ -9,8 +9,8 @@
 #include "Player.h"
 #include "botcommon.h"
 
-typedef uint32 EquipEntries[BOT_INVENTORY_SIZE];
-typedef std::map<uint16, EquipEntries*> BotSpecLevelEquipTemplate;
+typedef std::map<uint8, uint32> EquipEntries;
+typedef std::map<uint16, EquipEntries> BotSpecLevelEquipTemplate;
 
 class NbeEquipMgr {
 public:

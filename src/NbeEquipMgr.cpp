@@ -18,35 +18,48 @@ NbeEquipMgr* NbeEquipMgr::instance()
 
 void NbeEquipMgr::Equip(Player* player, bot_ai* ai, uint32 entry, uint8 slot)
 {
-    Item* item = Item::CreateItem(entry, 1, nullptr);
+    LOG_WARN("server.bot", "equip {}", entry);
+    player->AddItem(entry, 1);
+    Item* item = player->GetItemByEntry(entry);
     ai->Equip(slot, item, player->GetGUID());
 }
 
 void NbeEquipMgr::AutoEquip(Player* player, bot_ai* ai)
 {
     uint8 spec = ai->GetSpec();
+    LOG_WARN("server.bot", "auto equip spec {}", spec);
     if (equipTemplates.find(spec) == equipTemplates.end())
+    {
+        LOG_WARN("server.bot", "not templates found");
         return;
-    BotSpecLevelEquipTemplate bset = equipTemplates[spec];
+    }
+    BotSpecLevelEquipTemplate bset = equipTemplates.at(spec);
 
     uint16 masterLevel = getMasterLevel(player);
     uint16 maxLevel = 0;
 
     for (auto& [level, ee] : bset)
     {
+        LOG_WARN("server.bot", "bset {}", level);
+
         if (level > masterLevel || level < maxLevel)
             continue;
         maxLevel = level;
     }
     // not found
     if (maxLevel <= 0)
+    {
+        LOG_WARN("server.bot", "templates level {} not found", masterLevel);
         return;
+    }
 
     // apply all equip entries
-    EquipEntries* ee = bset[maxLevel];
+    EquipEntries ee = bset[maxLevel];
     for (uint8 slot = 0; slot < BOT_INVENTORY_SIZE; slot++)
     {
-        if (uint32 entry = (*ee)[slot])
+        LOG_WARN("server.bot", "templates level {} {} {}", masterLevel, slot, ee[slot]);
+
+        if (uint32 entry = ee[slot])
         {
             Equip(player, ai, entry, slot);
         }
@@ -67,9 +80,8 @@ void NbeEquipMgr::buildWarriorTemplates()
 
 void NbeEquipMgr::buildWarriorProtectionTemplates()
 {
-    BotSpecLevelEquipTemplate bset = equipTemplates[BOT_SPEC_WARRIOR_PROTECTION];
-
-    EquipEntries level_15 = { 0 };
+    BotSpecLevelEquipTemplate bset;
+    EquipEntries level_15;
     level_15[BOT_SLOT_MAINHAND]     = 935;
     level_15[BOT_SLOT_OFFHAND]      = 5443;
     level_15[BOT_SLOT_RANGED]       = 11304;
@@ -88,7 +100,8 @@ void NbeEquipMgr::buildWarriorProtectionTemplates()
     level_15[BOT_SLOT_TRINKET1]     = 0;
     level_15[BOT_SLOT_TRINKET2]     = 0;
     level_15[BOT_SLOT_NECK]         = 0;
-    bset.insert_or_assign(1, &level_15);
+    bset.insert_or_assign(15, level_15);
+    equipTemplates[BOT_SPEC_WARRIOR_PROTECTION] = bset;
 }
 
 void NbeEquipMgr::buildPriestTemplates()
@@ -98,9 +111,8 @@ void NbeEquipMgr::buildPriestTemplates()
 
 void NbeEquipMgr::buildPriestHolyTemplates()
 {
-    BotSpecLevelEquipTemplate bset = equipTemplates[BOT_SPEC_PRIEST_HOLY];
-
-    EquipEntries level_15 = { 0 };
+    BotSpecLevelEquipTemplate bset;
+    EquipEntries level_15;
     level_15[BOT_SLOT_MAINHAND] = 1300;
     level_15[BOT_SLOT_OFFHAND] = 0;
     level_15[BOT_SLOT_RANGED] = 0;
@@ -119,7 +131,9 @@ void NbeEquipMgr::buildPriestHolyTemplates()
     level_15[BOT_SLOT_TRINKET1] = 0;
     level_15[BOT_SLOT_TRINKET2] = 0;
     level_15[BOT_SLOT_NECK] = 0;
-    bset.insert_or_assign(1, &level_15);
+    bset.insert_or_assign(1, level_15);
+    equipTemplates[BOT_SPEC_PRIEST_HOLY] = bset;
+
 }
 
 void NbeEquipMgr::buildWarlockTemplates()
@@ -129,9 +143,8 @@ void NbeEquipMgr::buildWarlockTemplates()
 
 void NbeEquipMgr::buildWarlockDestroyTemplates()
 {
-    BotSpecLevelEquipTemplate bset = equipTemplates[BOT_SPEC_WARLOCK_DESTRUCTION];
-
-    EquipEntries level_15 = { 0 };
+    BotSpecLevelEquipTemplate bset;
+    EquipEntries level_15;
     level_15[BOT_SLOT_MAINHAND] = 1300;
     level_15[BOT_SLOT_OFFHAND] = 0;
     level_15[BOT_SLOT_RANGED] = 0;
@@ -150,7 +163,8 @@ void NbeEquipMgr::buildWarlockDestroyTemplates()
     level_15[BOT_SLOT_TRINKET1] = 0;
     level_15[BOT_SLOT_TRINKET2] = 0;
     level_15[BOT_SLOT_NECK] = 0;
-    bset.insert_or_assign(1, &level_15);
+    bset.insert_or_assign(1, level_15);
+    equipTemplates[BOT_SPEC_WARLOCK_DESTRUCTION] = bset;
 }
 
 uint16 NbeEquipMgr::getMasterLevel(Player* player)

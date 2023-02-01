@@ -28,7 +28,17 @@ public:
         };
         static ChatCommandTable nbeAddCommandTable =
         {
-            { "id",     HandleAddIdCommand,        SEC_PLAYER,      Console::No  }
+            { "id",     HandleAddIdCommand,        SEC_PLAYER,      Console::No  },
+            { "zs",     HandleAddZsCommand,        SEC_PLAYER,      Console::No  },
+            { "qs",     HandleAddQsCommand,        SEC_PLAYER,      Console::No  },
+            { "lr",     HandleAddLrCommand,        SEC_PLAYER,      Console::No  },
+            { "dz",     HandleAddDzCommand,        SEC_PLAYER,      Console::No  },
+            { "ms",     HandleAddMsCommand,        SEC_PLAYER,      Console::No  },
+            { "dk",     HandleAddDkCommand,        SEC_PLAYER,      Console::No  },
+            { "sm",     HandleAddSmCommand,        SEC_PLAYER,      Console::No  },
+            { "fs",     HandleAddFsCommand,        SEC_PLAYER,      Console::No  },
+            { "ss",     HandleAddSsCommand,        SEC_PLAYER,      Console::No  },
+            { "xd",     HandleAddXdCommand,        SEC_PLAYER,      Console::No  },
         };
         static ChatCommandTable nbeCommandTable = 
         {
@@ -70,13 +80,100 @@ public:
         if (!addByBotId(handler, id))
             return false;
 
-        // set ownner
-
-
         return true;
     }
 
+    static bool HandleAddZsCommand(ChatHandler* handler, char const* args)
+    {
+        return addByBotClass(handler, BOT_CLASS_WARRIOR);
+    }
+    static bool HandleAddQsCommand(ChatHandler* handler, char const* args)
+    {
+        return addByBotClass(handler, BOT_CLASS_PALADIN);
+    }
+    static bool HandleAddLrCommand(ChatHandler* handler, char const* args)
+    {
+        return addByBotClass(handler, BOT_CLASS_HUNTER);
+    }
+    static bool HandleAddDzCommand(ChatHandler* handler, char const* args)
+    {
+        return addByBotClass(handler, BOT_CLASS_ROGUE);
+    }
+    static bool HandleAddMsCommand(ChatHandler* handler, char const* args)
+    {
+        return addByBotClass(handler, BOT_CLASS_PRIEST);
+    }
+    static bool HandleAddDkCommand(ChatHandler* handler, char const* args)
+    {
+        return addByBotClass(handler, BOT_CLASS_DEATH_KNIGHT);
+    }
+    static bool HandleAddSmCommand(ChatHandler* handler, char const* args)
+    {
+        return addByBotClass(handler, BOT_CLASS_SHAMAN);
+    }
+    static bool HandleAddFsCommand(ChatHandler* handler, char const* args)
+    {
+        return addByBotClass(handler, BOT_CLASS_MAGE);
+    }
+    static bool HandleAddSsCommand(ChatHandler* handler, char const* args)
+    {
+        return addByBotClass(handler, BOT_CLASS_WARLOCK);
+    }
+    static bool HandleAddXdCommand(ChatHandler* handler, char const* args)
+    {
+        return addByBotClass(handler, BOT_CLASS_DRUID);
+    }
 private:
+    static bool addByBotClass(ChatHandler* handler, uint8 botClass)
+    {
+        if (!botClass || botClass == BOT_CLASS_NONE || botClass >= BOT_CLASS_END)
+        {
+            handler->PSendSysMessage("invalid bot class");
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        uint8 localeIndex = handler->GetSessionDbLocaleIndex();
+        CreatureTemplateContainer const* ctc = sObjectMgr->GetCreatureTemplates();
+        for (CreatureTemplateContainer::const_iterator itr = ctc->begin(); itr != ctc->end(); ++itr)
+        {
+            uint32 id = itr->second.Entry;
+
+            if (id == BOT_ENTRY_MIRROR_IMAGE_BM)
+                continue;
+            //Blademaster disabled
+            if (botClass == BOT_CLASS_BM)
+                continue;
+
+            NpcBotExtras const* _botExtras = BotDataMgr::SelectNpcBotExtras(id);
+            if (!_botExtras || _botExtras->bclass != botClass)
+                continue;
+
+            if (BotDataMgr::SelectNpcBotData(id))
+                continue;
+
+            uint8 race = _botExtras->race;
+
+            if (CreatureLocale const* creatureLocale = sObjectMgr->GetCreatureLocale(id))
+            {
+                if (creatureLocale->Name.size() > localeIndex && !creatureLocale->Name[localeIndex].empty())
+                {
+                    continue;
+                }
+            }
+
+            std::string name = itr->second.Name;
+            if (name.empty())
+                continue;
+
+            return addByBotId(handler, id);
+        }
+
+        handler->PSendSysMessage("not bot found");
+        handler->SetSentErrorMessage(true);
+        return false;
+    }
+
     static bool addByBotId(ChatHandler* handler, uint32 id)
     {
         CreatureTemplate const* creInfo = sObjectMgr->GetCreatureTemplate(id);
@@ -170,6 +267,8 @@ private:
         sObjectMgr->AddCreatureToGrid(db_guid, sObjectMgr->GetCreatureData(db_guid));
 
         handler->SendSysMessage("NpcBot successfully spawned");
+
+        creature->GetBotAI()->SetBotOwner(handler->GetPlayer());
         return true;
     }
 };
