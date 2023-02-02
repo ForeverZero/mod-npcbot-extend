@@ -30,7 +30,8 @@ private:
     void buildPriestHolyTemplates();
 
     void buildWarlockTemplates();
-    void buildWarlockDestroyTemplates();
+
+    void buildRogueTemplates();
 private:
     std::map<uint8, BotSpecLevelEquipTemplate> equipTemplates;
     uint16 getMasterLevel(Player*);

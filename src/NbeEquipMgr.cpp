@@ -19,6 +19,11 @@ NbeEquipMgr* NbeEquipMgr::instance()
 void NbeEquipMgr::Equip(Player* player, bot_ai* ai, uint32 entry, uint8 slot)
 {
     LOG_WARN("server.bot", "equip {}", entry);
+
+    Item* bItem = ai->GetEquips(slot);
+    if (bItem && bItem->GetEntry() == entry)
+        return;
+
     player->AddItem(entry, 1);
     Item* item = player->GetItemByEntry(entry);
     ai->Equip(slot, item, player->GetGUID());
@@ -70,13 +75,36 @@ void NbeEquipMgr::buildTemplates()
 {
     buildWarriorTemplates();
     buildPriestTemplates();
-    buildWarlockDestroyTemplates();
+    buildWarlockTemplates();
+    buildRogueTemplates();
 }
 
 void NbeEquipMgr::buildWarriorTemplates()
 {
     buildWarriorProtectionTemplates();
 }
+
+/*
+    level_15[BOT_SLOT_MAINHAND] = 0;
+    level_15[BOT_SLOT_OFFHAND] = 0;
+    level_15[BOT_SLOT_RANGED] = 0;
+    level_15[BOT_SLOT_HEAD] = 0;
+    level_15[BOT_SLOT_SHOULDERS] = 0;
+    level_15[BOT_SLOT_CHEST] = 0;
+    level_15[BOT_SLOT_WAIST] = 0;
+    level_15[BOT_SLOT_LEGS] = 0;
+    level_15[BOT_SLOT_FEET] = 0;
+    level_15[BOT_SLOT_WRIST] = 0;
+    level_15[BOT_SLOT_HANDS] = 0;
+    level_15[BOT_SLOT_BACK] = 0;
+    level_15[BOT_SLOT_BODY] = 0;
+    level_15[BOT_SLOT_FINGER1] = 0;
+    level_15[BOT_SLOT_FINGER2] = 0;
+    level_15[BOT_SLOT_TRINKET1] = 0;
+    level_15[BOT_SLOT_TRINKET2] = 0;
+    level_15[BOT_SLOT_NECK] = 0;
+
+*/
 
 void NbeEquipMgr::buildWarriorProtectionTemplates()
 {
@@ -133,15 +161,11 @@ void NbeEquipMgr::buildPriestHolyTemplates()
     level_15[BOT_SLOT_NECK] = 0;
     bset.insert_or_assign(1, level_15);
     equipTemplates[BOT_SPEC_PRIEST_HOLY] = bset;
+    equipTemplates[BOT_SPEC_PRIEST_DISCIPLINE] = bset;
 
 }
 
 void NbeEquipMgr::buildWarlockTemplates()
-{
-    buildWarlockDestroyTemplates();
-}
-
-void NbeEquipMgr::buildWarlockDestroyTemplates()
 {
     BotSpecLevelEquipTemplate bset;
     EquipEntries level_15;
@@ -165,6 +189,36 @@ void NbeEquipMgr::buildWarlockDestroyTemplates()
     level_15[BOT_SLOT_NECK] = 0;
     bset.insert_or_assign(1, level_15);
     equipTemplates[BOT_SPEC_WARLOCK_DESTRUCTION] = bset;
+    equipTemplates[BOT_SPEC_WARLOCK_AFFLICTION] = bset;
+    equipTemplates[BOT_SPEC_WARLOCK_DEMONOLOGY] = bset;
+}
+
+void NbeEquipMgr::buildRogueTemplates()
+{
+    BotSpecLevelEquipTemplate bset;
+    EquipEntries level_15;
+    level_15[BOT_SLOT_MAINHAND] = 3184;
+    level_15[BOT_SLOT_OFFHAND] = 3184;
+    level_15[BOT_SLOT_RANGED] = 3107;
+    level_15[BOT_SLOT_HEAD] = 0;
+    level_15[BOT_SLOT_SHOULDERS] = 0;
+    level_15[BOT_SLOT_CHEST] = 2317;
+    level_15[BOT_SLOT_WAIST] = 5780;
+    level_15[BOT_SLOT_LEGS] = 1934;
+    level_15[BOT_SLOT_FEET] = 4788;
+    level_15[BOT_SLOT_WRIST] = 14561;
+    level_15[BOT_SLOT_HANDS] = 1314;
+    level_15[BOT_SLOT_BACK] = 0;
+    level_15[BOT_SLOT_BODY] = 0;
+    level_15[BOT_SLOT_FINGER1] = 0;
+    level_15[BOT_SLOT_FINGER2] = 0;
+    level_15[BOT_SLOT_TRINKET1] = 0;
+    level_15[BOT_SLOT_TRINKET2] = 0;
+    level_15[BOT_SLOT_NECK] = 0;
+    bset.insert_or_assign(1, level_15);
+    equipTemplates[BOT_SPEC_ROGUE_COMBAT] = bset;
+    equipTemplates[BOT_SPEC_ROGUE_ASSASINATION] = bset;
+    equipTemplates[BOT_SPEC_ROGUE_SUBTLETY] = bset;
 }
 
 uint16 NbeEquipMgr::getMasterLevel(Player* player)

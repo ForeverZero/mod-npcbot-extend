@@ -11,6 +11,7 @@
 #include "ObjectMgr.h"
 #include "Creature.h"
 #include "botdatamgr.h"
+#include "botmgr.h"
 
 
 using namespace Acore::ChatCommands;
@@ -24,7 +25,8 @@ public:
     {
         static ChatCommandTable nbeEquipCommandTable =
         {
-            { "auto",     HandleEquipAutoCommand,        SEC_PLAYER,      Console::No  }
+            { "auto",     HandleEquipAutoCommand,        SEC_PLAYER,      Console::No  },
+            { "autoall",     HandleEquipAutoAllCommand,        SEC_PLAYER,      Console::No  },
         };
         static ChatCommandTable nbeAddCommandTable =
         {
@@ -64,6 +66,21 @@ public:
         Player* player = handler->GetPlayer();
         bot_ai* ai = bot->GetBotAI();
         sNbeEquipMgr->AutoEquip(player, ai);
+        return true;
+    }
+
+    static bool HandleEquipAutoAllCommand(ChatHandler* handler, char const* args)
+    {
+        Player* player = handler->GetPlayer();
+        BotMgr* botmgr = player->GetBotMgr();
+        BotMap* map = botmgr->GetBotMap();
+
+        for (auto& [_, creature] : *map)
+        {
+            bot_ai* ai = creature->GetBotAI();
+            sNbeEquipMgr->AutoEquip(player, ai);
+        }
+
         return true;
     }
 
