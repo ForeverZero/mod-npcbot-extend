@@ -85,6 +85,7 @@ void NbeEquipMgr::buildWarriorTemplates()
 }
 
 /*
+    EquipEntries level_15;
     level_15[BOT_SLOT_MAINHAND] = 0;
     level_15[BOT_SLOT_OFFHAND] = 0;
     level_15[BOT_SLOT_RANGED] = 0;
@@ -103,7 +104,7 @@ void NbeEquipMgr::buildWarriorTemplates()
     level_15[BOT_SLOT_TRINKET1] = 0;
     level_15[BOT_SLOT_TRINKET2] = 0;
     level_15[BOT_SLOT_NECK] = 0;
-
+    bset.insert_or_assign(15, level_15);
 */
 
 void NbeEquipMgr::buildWarriorProtectionTemplates()
@@ -129,6 +130,28 @@ void NbeEquipMgr::buildWarriorProtectionTemplates()
     level_15[BOT_SLOT_TRINKET2]     = 0;
     level_15[BOT_SLOT_NECK]         = 0;
     bset.insert_or_assign(15, level_15);
+
+    EquipEntries level_30;
+    level_30[BOT_SLOT_MAINHAND] = 3850;
+    level_30[BOT_SLOT_OFFHAND] = 4477;
+    level_30[BOT_SLOT_RANGED] = 11305;
+    level_30[BOT_SLOT_HEAD] = 3836;
+    level_30[BOT_SLOT_SHOULDERS] = 6404;
+    level_30[BOT_SLOT_CHEST] = 7688;
+    level_30[BOT_SLOT_WAIST] = 9405;
+    level_30[BOT_SLOT_LEGS] = 3843;
+    level_30[BOT_SLOT_FEET] = 4076;
+    level_30[BOT_SLOT_WRIST] = 14759;
+    level_30[BOT_SLOT_HANDS] = 23170;
+    level_30[BOT_SLOT_BACK] = 18427;
+    level_30[BOT_SLOT_BODY] = 0;
+    level_30[BOT_SLOT_FINGER1] = 0;
+    level_30[BOT_SLOT_FINGER2] = 0;
+    level_30[BOT_SLOT_TRINKET1] = 0;
+    level_30[BOT_SLOT_TRINKET2] = 0;
+    level_30[BOT_SLOT_NECK] = 0;
+    bset.insert_or_assign(30, level_30);
+
     equipTemplates[BOT_SPEC_WARRIOR_PROTECTION] = bset;
 }
 
@@ -159,7 +182,29 @@ void NbeEquipMgr::buildPriestHolyTemplates()
     level_15[BOT_SLOT_TRINKET1] = 0;
     level_15[BOT_SLOT_TRINKET2] = 0;
     level_15[BOT_SLOT_NECK] = 0;
-    bset.insert_or_assign(1, level_15);
+    bset.insert_or_assign(15, level_15);
+
+    EquipEntries level_30;
+    level_30[BOT_SLOT_MAINHAND] = 19569;
+    level_30[BOT_SLOT_OFFHAND] = 0;
+    level_30[BOT_SLOT_RANGED] = 7708;
+    level_30[BOT_SLOT_HEAD] = 7691;
+    level_30[BOT_SLOT_SHOULDERS] = 4718;
+    level_30[BOT_SLOT_CHEST] = 7728;
+    level_30[BOT_SLOT_WAIST] = 20099;
+    level_30[BOT_SLOT_LEGS] = 2277;
+    level_30[BOT_SLOT_FEET] = 9454;
+    level_30[BOT_SLOT_WRIST] = 6047;
+    level_30[BOT_SLOT_HANDS] = 9395;
+    level_30[BOT_SLOT_BACK] = 5181;
+    level_30[BOT_SLOT_BODY] = 0;
+    level_30[BOT_SLOT_FINGER1] = 0;
+    level_30[BOT_SLOT_FINGER2] = 0;
+    level_30[BOT_SLOT_TRINKET1] = 0;
+    level_30[BOT_SLOT_TRINKET2] = 0;
+    level_30[BOT_SLOT_NECK] = 0;
+    bset.insert_or_assign(30, level_30);
+
     equipTemplates[BOT_SPEC_PRIEST_HOLY] = bset;
     equipTemplates[BOT_SPEC_PRIEST_DISCIPLINE] = bset;
 
@@ -187,7 +232,29 @@ void NbeEquipMgr::buildWarlockTemplates()
     level_15[BOT_SLOT_TRINKET1] = 0;
     level_15[BOT_SLOT_TRINKET2] = 0;
     level_15[BOT_SLOT_NECK] = 0;
-    bset.insert_or_assign(1, level_15);
+    bset.insert_or_assign(15, level_15);
+
+    EquipEntries level_30;
+    level_30[BOT_SLOT_MAINHAND] = 19569;
+    level_30[BOT_SLOT_OFFHAND] = 0;
+    level_30[BOT_SLOT_RANGED] = 7708;
+    level_30[BOT_SLOT_HEAD] = 7691;
+    level_30[BOT_SLOT_SHOULDERS] = 4718;
+    level_30[BOT_SLOT_CHEST] = 7728;
+    level_30[BOT_SLOT_WAIST] = 20099;
+    level_30[BOT_SLOT_LEGS] = 2277;
+    level_30[BOT_SLOT_FEET] = 9454;
+    level_30[BOT_SLOT_WRIST] = 6047;
+    level_30[BOT_SLOT_HANDS] = 9395;
+    level_30[BOT_SLOT_BACK] = 5181;
+    level_30[BOT_SLOT_BODY] = 0;
+    level_30[BOT_SLOT_FINGER1] = 0;
+    level_30[BOT_SLOT_FINGER2] = 0;
+    level_30[BOT_SLOT_TRINKET1] = 0;
+    level_30[BOT_SLOT_TRINKET2] = 0;
+    level_30[BOT_SLOT_NECK] = 0;
+    bset.insert_or_assign(30, level_30);
+
     equipTemplates[BOT_SPEC_WARLOCK_DESTRUCTION] = bset;
     equipTemplates[BOT_SPEC_WARLOCK_AFFLICTION] = bset;
     equipTemplates[BOT_SPEC_WARLOCK_DEMONOLOGY] = bset;
@@ -215,7 +282,29 @@ void NbeEquipMgr::buildRogueTemplates()
     level_15[BOT_SLOT_TRINKET1] = 0;
     level_15[BOT_SLOT_TRINKET2] = 0;
     level_15[BOT_SLOT_NECK] = 0;
-    bset.insert_or_assign(1, level_15);
+    bset.insert_or_assign(15, level_15);
+
+    EquipEntries level_30;
+    level_30[BOT_SLOT_MAINHAND] = 7682;
+    level_30[BOT_SLOT_OFFHAND] = 7682;
+    level_30[BOT_SLOT_RANGED] = 3108;
+    level_30[BOT_SLOT_HEAD] = 6204;
+    level_30[BOT_SLOT_SHOULDERS] = 4721;
+    level_30[BOT_SLOT_CHEST] = 7374;
+    level_30[BOT_SLOT_WAIST] = 4257;
+    level_30[BOT_SLOT_LEGS] = 4054;
+    level_30[BOT_SLOT_FEET] = 4055;
+    level_30[BOT_SLOT_WRIST] = 9428;
+    level_30[BOT_SLOT_HANDS] = 7690;
+    level_30[BOT_SLOT_BACK] = 14593;
+    level_30[BOT_SLOT_BODY] = 0;
+    level_30[BOT_SLOT_FINGER1] = 0;
+    level_30[BOT_SLOT_FINGER2] = 0;
+    level_30[BOT_SLOT_TRINKET1] = 0;
+    level_30[BOT_SLOT_TRINKET2] = 0;
+    level_30[BOT_SLOT_NECK] = 0;
+    bset.insert_or_assign(30, level_30);
+
     equipTemplates[BOT_SPEC_ROGUE_COMBAT] = bset;
     equipTemplates[BOT_SPEC_ROGUE_ASSASINATION] = bset;
     equipTemplates[BOT_SPEC_ROGUE_SUBTLETY] = bset;
