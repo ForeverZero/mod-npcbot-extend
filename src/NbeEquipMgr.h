@@ -8,6 +8,7 @@
 #include "bot_ai.h"
 #include "Player.h"
 #include "botcommon.h"
+#include "ItemTemplate.h"
 
 typedef std::map<uint8, uint32> EquipEntries;
 typedef std::map<uint16, EquipEntries> BotSpecLevelEquipTemplate;
@@ -21,17 +22,8 @@ public:
     void Equip(Player* player, bot_ai* ai, uint32 entry, uint8 slot);
     void AutoEquip(Player* player, bot_ai* ai);
 private:
-    void buildTemplates();
+    ItemSubclassArmor getItemSubclassArmor(bot_ai* ai, uint8 level);
 
-    void buildWarriorTemplates();
-    void buildWarriorProtectionTemplates();
-
-    void buildPriestTemplates();
-    void buildPriestHolyTemplates();
-
-    void buildWarlockTemplates();
-
-    void buildRogueTemplates();
 private:
     std::map<uint8, BotSpecLevelEquipTemplate> equipTemplates;
     uint16 getMasterLevel(Player*);

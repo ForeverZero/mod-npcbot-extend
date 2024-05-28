@@ -12,7 +12,7 @@
 #include "Creature.h"
 #include "botdatamgr.h"
 #include "botmgr.h"
-
+#include "NbeMgr.h"
 
 using namespace Acore::ChatCommands;
 
@@ -46,6 +46,7 @@ public:
         {
             { "equip",     nbeEquipCommandTable},
             { "add",     nbeAddCommandTable},
+            { "delall", HandleDelAllCommand, SEC_PLAYER,      Console::No},
         };
         static ChatCommandTable commandTable =
         {
@@ -84,6 +85,12 @@ public:
         return true;
     }
 
+    static bool HandleDelAllCommand(ChatHandler* handler, char const* args )
+    {
+        Player* player = handler->GetPlayer();
+        sNbeMgr->DelAllBot(player);
+        return true;
+    }
     static bool HandleAddIdCommand(ChatHandler* handler, char const* args)
     {
         uint32 id = atoi(strtok((char*)args, " "));
