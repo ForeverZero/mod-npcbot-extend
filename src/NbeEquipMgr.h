@@ -11,7 +11,6 @@
 #include "ItemTemplate.h"
 
 typedef std::map<uint8, uint32> EquipEntries;
-typedef std::map<uint16, EquipEntries> BotSpecLevelEquipTemplate;
 
 class NbeEquipMgr {
 public:
@@ -23,10 +22,7 @@ public:
     void AutoEquip(Player* player, bot_ai* ai);
 private:
     ItemSubclassArmor getItemSubclassArmor(bot_ai* ai, uint8 level);
-
-private:
-    std::map<uint8, BotSpecLevelEquipTemplate> equipTemplates;
-    uint16 getMasterLevel(Player*);
+    void randomEquipArmorByMasterLevel(bot_ai* ai, uint8 botSlot, InventoryType inventoryType, ItemSubclassArmor subclass);
 };
 
 #define sNbeEquipMgr NbeEquipMgr::instance()

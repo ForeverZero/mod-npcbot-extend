@@ -15,11 +15,18 @@ NbeMgr* NbeMgr::instance()
 }
 
 void NbeMgr::DelAllBot(Player *owner) {
+    LOG_INFO("server.bot", "delete all bots for {}", owner->GetPlayerName());
     BotMgr* botMgr = owner->GetBotMgr();
     BotMap* botMap = botMgr->GetBotMap();
+
+    std::list<Creature*> botList;
     for (auto iter = botMap->begin(); iter != botMap->end(); ++iter)
     {
-        Creature* bot = iter->second;
+        botList.push_back(iter->second);
+    }
+    for (Creature* bot : botList)
+    {
+        LOG_INFO("server.bot", "delete bot {}", bot->GetGUID().GetCounter());
         bot->GetBotAI()->UnEquipAll(owner->GetGUID());
         owner->GetBotMgr()->RemoveBot(bot->GetGUID(), BOT_REMOVE_DISMISS);
         bot->CombatStop();
@@ -29,4 +36,5 @@ void NbeMgr::DelAllBot(Player *owner) {
         bot->AddObjectToRemoveList();
         BotDataMgr::UpdateNpcBotData(bot->GetEntry(), NPCBOT_UPDATE_ERASE);
     }
+    LOG_INFO("server.bot", "delete all bots for {} done.", owner->GetPlayerName());
 }
