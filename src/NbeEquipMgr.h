@@ -36,9 +36,9 @@ public:
     void AutoEquip(Player* player, bot_ai* ai);
 private:
     ItemSubclassArmor getItemSubclassArmor(bot_ai* ai, uint8 level);
-    ItemSubclassWeapon getItemSubclassWeaponByMasterLevel(bot_ai* ai);
+    ItemSubclassWeapon getItemSubclassWeapon(bot_ai* ai);
     void randomEquipArmorByMasterLevel(bot_ai* ai, uint8 botSlot, InventoryType inventoryType, ItemSubclassArmor subclass, AllowableClass allowableClass);
-    void randomEquipWeaponByMasterLevel(bot_ai* ai);
+    void randomEquipWeaponByMasterLevel(bot_ai* ai, AllowableClass allowableClass);
     AllowableClass getAllowableClass(bot_ai* ai);
     std::string getItemModTypeArmorSql(bot_ai* ai);
 };

@@ -57,7 +57,7 @@ void NbeEquipMgr::AutoEquip(Player* player, bot_ai* ai)
     randomEquipArmorByMasterLevel(ai, BOT_SLOT_TRINKET1, INVTYPE_TRINKET, ITEM_SUBCLASS_ARMOR_MISC, ac);
     randomEquipArmorByMasterLevel(ai, BOT_SLOT_TRINKET2, INVTYPE_TRINKET, ITEM_SUBCLASS_ARMOR_MISC, ac);
 
-    randomEquipWeaponByMasterLevel(ai);
+    randomEquipWeaponByMasterLevel(ai, ac);
 }
 
 ItemSubclassArmor NbeEquipMgr::getItemSubclassArmor(bot_ai* ai, uint8 level)
@@ -83,7 +83,7 @@ ItemSubclassArmor NbeEquipMgr::getItemSubclassArmor(bot_ai* ai, uint8 level)
     return ITEM_SUBCLASS_ARMOR_CLOTH;
 }
 
-ItemSubclassWeapon NbeEquipMgr::getItemSubclassWeaponByMasterLevel(bot_ai* ai)
+ItemSubclassWeapon NbeEquipMgr::getItemSubclassWeapon(bot_ai* ai)
 {
     uint8 botClass = ai->GetBotClass();
     if (botClass == BOT_CLASS_MAGE || botClass == BOT_CLASS_WARLOCK || botClass == BOT_CLASS_PRIEST || botClass == BOT_CLASS_SHAMAN || botClass == BOT_CLASS_DRUID)
@@ -145,9 +145,40 @@ void NbeEquipMgr::randomEquipArmorByMasterLevel(bot_ai* ai, uint8 botSlot, Inven
     Equip(owner, ai, entry, botSlot);
 }
 
-void NbeEquipMgr::randomEquipWeaponByMasterLevel(bot_ai* ai)
+void NbeEquipMgr::randomEquipWeaponByMasterLevel(bot_ai* ai, AllowableClass allowableClass)
 {
+    uint8 toLevel = ai->GetBotOwner()->GetLevel();
+    uint8 fromLevel = toLevel - 5;
+    Player* owner = ai->GetBotOwner();
+    ObjectGuid botGuid = ai->GetGUID();
+    LOG_INFO("server.bot", "random equip bot weapon by owner level for player {}", owner->GetPlayerName());
 
+    uint8 weaponSubclass = getItemSubclassWeapon(ai);
+    std::string statSql = getItemModTypeArmorSql(ai);
+    std::string sql = "select entry, name from item_template";
+    sql += " where class = 2 and subclass = {} and RequiredLevel between {} and {}";
+    sql += " and (AllowableClass = -1 or AllowableClass & {} > 0)";
+    sql += " and (stat_type1 in" + statSql + "or stat_type2 in" + statSql + "or stat_type3 in" + statSql + "or stat_type4 in" + statSql
+        + "or stat_type5 in" + statSql + "or stat_type6 in" + statSql + "or stat_type7 in" + statSql + "or stat_type8 in" + statSql
+        + ")";
+    sql += " order by rand() limit 1";
+
+    QueryResult rst = WorldDatabase.Query(sql, weaponSubclass, fromLevel, toLevel, allowableClass);
+    if (!rst)
+    {
+        LOG_WARN("server.bot", "unable to find weapon for bot {}", botGuid.GetCounter());
+        return;
+    }
+
+    Field* field = rst->Fetch();
+    uint32 entry = field[0].Get<uint32>();
+    std::string name = field[1].Get<std::string>();
+    LOG_INFO("server.bot", "equip {} - {} for bot {}", entry, name, botGuid.GetCounter());
+    Equip(owner, ai, entry, BOT_SLOT_MAINHAND);
+    if (ai->GetBotClass() == BOT_CLASS_ROGUE || ai->GetSpec() == BOT_SPEC_WARRIOR_FURY)
+    {
+        Equip(owner, ai, entry, BOT_SLOT_OFFHAND);
+    }
 }
 
 AllowableClass NbeEquipMgr::getAllowableClass(bot_ai* ai)
